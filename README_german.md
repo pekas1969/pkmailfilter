@@ -148,5 +148,6 @@ Zum Testen ohne echte IMAP-Verbindung kannst du die IMAP-Logik in `apply_filters
 ---
 
 ## 📄 Lizenz
-
-Dies ist ein privates Tool, das du frei erweitern kannst. Eine öffentliche Lizenz kannst du auf Wunsch ergänzen (z. B. MIT).
+MIT-License
+(C) 2025 by Peter Kasparak
+peter.kasparak@gmail.com
