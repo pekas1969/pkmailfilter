@@ -1,0 +1,13 @@
+[
+  "contain:subject",
+  "move_to:Trash",
+  "filter:\"beischlaf\",\"bestellen\",\"casino\",\"credit\",\"erektion\",\"estate\",\"erhalten sie\",\"finance\",\"geschlechtsverkehr\",\"gewinn\",\"hallo\",\"hart\",\"langweilig\",\"liebesspiel\",\"money\",\"orgasmus\",\"penis\",\"please\",\"viagra\",\"sex\"",
+
+  "contain:from",
+  "move_to:Trash",
+  "filter:\"angebote-brillen\",\".be\",\".ca\",\"dreamstime.com\",\"ifttt.com\",\"instagram\",\".jp\",\"kazaarfragrances.com\",\".kr\",\"pummys.com\",\"revolucionandoosnegocios.com\",\".ro\",\".ru\",\".stellardispatch.com\",\"thedarktenor\"",
+
+  "contain:body",
+  "move_to:Trash",
+  "filter:\"beischlaf\",\"bestellen\",\"casino\",\"credit\",\"erektion\",\"estate\",\"finance\",\"geschlechtsverkehr\",\"gewinn\",\"liebesspiel\",\"money\",\"orgasmus\",\"penis\",\"please\",\"viagra\",\"sex\""
+]

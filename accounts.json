@@ -1,0 +1,10 @@
+[
+  {
+    "email": "pkasparak@gmail.com",
+    "host": "imap.gmail.com",
+    "port": 993,
+    "ssl": true,
+    "username": "pkasparak@gmail.com",
+    "password_enc": "gAAAAABodIr5nfcV4lWBEV6Hwf_lIKjmTM6Rw7HFPO1ZSwpqnLd4iHqAM870gpV7GB1mjMXVXBzwdnUVEWlPAjXZV4ncjFSaRs7v1IVfY99ALfETBgVl9EI="
+  }
+]

@@ -1,8 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=PKMailFilter GUI
-Exec=/usr/bin/python3 "/home/peter/Daten/Dev/Python/pkmailfilter/pkmailfiltergui.py"
-Icon=internet-mail
-Terminal=false
-Categories=Network;Email;Internet;
-StartupNotify=true

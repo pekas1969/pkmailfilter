@@ -1,139 +1,152 @@
-# pkmailfilter
+# 📬 pkmailfilter – E-Mail-Vorfilterung über IMAP (CLI-Tool)
 
-Ein einfaches Python-Konsolentool zum Verwalten und Anwenden von IMAP-Mailfiltern.
-
----
-
-## Funktionen
-
-- Verwaltung mehrerer Mail-Accounts (hinzufügen, auflisten, löschen)
-- Globale Filter und Account-spezifische Filter (Anzeigen, Hinzufügen, Löschen)
-- Filter basierend auf `from`, `subject` oder `body` mit Aktionen wie Verschieben in Ordner oder Löschen (Trash)
-- Verschlüsselte Speicherung der Passwörter mit Fernet
-- Ausführung der Filter auf die jeweiligen Mail-Accounts
-- CLI-Auswahlmenü zur komfortablen Bedienung
-- Möglichkeit zur Ausführung der Filter per Kommandozeilenparameter (z.B. für Cronjobs)
+`pkmailfilter` ist ein leichtgewichtiges Python-Tool für das Terminal, das hilft, E-Mails anhand vordefinierter Filterregeln automatisch direkt auf dem IMAP-Server zu sortieren. Es unterstützt mehrere Accounts und benutzerdefinierte Filterdateien.
 
 ---
 
-## Installation
+## ✅ Funktionen
 
-1. Repository klonen:
+- Verwalten mehrerer E-Mail-Accounts
+- Globale und account-spezifische Filter
+- Filterung nach Absender, Betreff oder Body-Inhalt
+- Verschlüsselung der Passwörter mit Fernet
+- Manuelle oder automatische Filterausführung über `--apply`
+- Verständliche Filteranzeige im Menü
 
-```bash
-git clone https://dein.git.repo.url/pkmailfilter.git
-cd pkmailfilter
-```
+---
 
-2. Abhängigkeiten installieren:
+## 🧰 Voraussetzungen
 
+- Python 3.7 oder neuer
+- Die Python-Pakete:
+  - `cryptography`
+  - (Optional) `imaplib` (Teil der Standardbibliothek)
+
+Installation der Abhängigkeiten:
 ```bash
 pip install cryptography
 ```
 
-3. (Optional) Fernet-Schlüssel generieren und speichern (wird automatisch erstellt, falls nicht vorhanden):
+---
 
-```bash
-python3 pkmailfilter.py
-# Beim ersten Start wird automatisch ein Schlüssel unter ~/.config/pkmailfilter/fernet.key angelegt
+## 📁 Verzeichnisstruktur
+
+Beim ersten Start werden automatisch folgende Ordner und Dateien angelegt:
+
+```
+./config/fernet.key           # Schlüssel zur Passwort-Verschlüsselung
+./filters/global.json         # Globale Filterregeln
+./filters/<account>.json      # Account-spezifische Filter
+./accounts.json               # Liste aller Accounts
 ```
 
 ---
 
-## Nutzung
-
-Starte das Programm einfach mit:
+## 🚀 Starten des Tools
 
 ```bash
 python3 pkmailfilter.py
 ```
 
-Du erhältst ein Menü mit folgenden Optionen:
+Es erscheint ein interaktives Menü:
 
-- Account hinzufügen, löschen und auflisten
-- Globale Filter anzeigen, hinzufügen und löschen
-- Account-spezifische Filter anzeigen, hinzufügen und löschen
-- Filter ausführen (alle Accounts filtern)
-
-### Passwortspeicherung
-
-Passwörter werden mit Fernet verschlüsselt in der Konfigurationsdatei gespeichert, sodass sie nicht im Klartext auf der Festplatte liegen.
+```
+📥 pkmailfilter Menü
+1. Account anlegen
+2. Account löschen
+3. Accounts anzeigen
+4. Globale Filter anzeigen
+5. Account-Filter anzeigen
+6. Filter ausführen
+7. Beenden
+```
 
 ---
 
-## Filter konfigurieren
+## 🧑‍💼 Accounts verwalten
 
-Filter werden als JSON-Dateien unter `~/.config/pkmailfilter/filters/` abgelegt:
+**Neuen Account anlegen:**
+- Gib E-Mail, IMAP-Host (z. B. `imap.gmail.com`), Port (meist `993`), Verschlüsselung (SSL), Passwort ein.
+- Das Passwort wird sicher mit Fernet verschlüsselt und in `accounts.json` gespeichert.
+- Eine zugehörige Filterdatei wird automatisch unter `filters/` angelegt.
 
-- `global.json` für globale Filter
-- `<email>.json` für Account-spezifische Filter
+---
 
-Beispiel für einen Filtereintrag:
+## 🔍 Filterregeln
+
+Filter sind als JSON-Array gespeichert – immer 3 Einträge pro Regelblock:
 
 ```json
 [
-  {
-    "field": "subject",
-    "contains": "Rechnung",
-    "action": "Ablage/Rechnungen"
-  }
+  "contain:from",
+  "move_to:Trash",
+  "filter:\"viagra\",\"casino\",\"sex\"",
+
+  "contain:subject",
+  "move_to:Spam",
+  "filter:\"gewinn\",\"kredit\""
 ]
 ```
 
-Filter können nach dem Feld `from`, `subject` oder `body` suchen und die Mail in einen Ordner verschieben oder in den Papierkorb legen (`Trash`).
+Jeder Block besteht aus:
+- **1. Zeile**: `contain:from`, `contain:subject`, `contain:body`
+- **2. Zeile**: `move_to:<Zielordner>`
+- **3. Zeile**: `filter:"begriff1","begriff2",...`
+
+Diese Struktur **muss exakt eingehalten werden**.
 
 ---
 
-## Filter ausführen per Kommandozeile / Cronjob
+## 📂 Filter anzeigen
 
-Das Tool kann die Filter auch direkt per Kommandozeilenargument ausführen, ohne das Menü zu starten:
+Im Menü:
+- **Globale Filter anzeigen (4)** – zeigt alle Filter aus `filters/global.json`
+- **Account-Filter anzeigen (5)** – Auswahl eines Accounts, Anzeige der zugehörigen Filterdatei
 
+Die Filter werden lesbar dargestellt, z. B.:
+
+```
+Von: viagra, casino, sex → Trash
+Betreff: gewinn, kredit → Spam
+```
+
+---
+
+## ⚙ Filter ausführen
+
+Im Menü oder über Kommandozeile:
 ```bash
 python3 pkmailfilter.py --apply
 ```
 
-### Beispiel Cronjob (alle 30 Minuten):
+Das Tool verbindet sich mit allen eingerichteten Accounts via IMAP, lädt ungelesene E-Mails und prüft diese auf Filterregeln. Bei Übereinstimmungen werden die Mails in den angegebenen Ordner verschoben.
 
-```bash
-*/30 * * * * /usr/bin/python3 /pfad/zu/pkmailfilter/pkmailfilter.py --apply >> /pfad/zu/pkmailfilter/pkmailfilter.log 2>&1
-```
-
-**Wichtig:**
-
-- Die Datei `fernet.key` muss vorhanden sein und im gleichen Benutzerkontext wie der Cronjob liegen.
-- Die Konfigurationsdateien müssen korrekt angelegt und mit verschlüsselten Passwörtern versehen sein.
+⚠ Achtung: Die IMAP-Verarbeitung muss ggf. je nach Mailanbieter freigeschaltet werden (z. B. App-Passwörter bei Gmail).
 
 ---
 
-## Speicherorte
+## 🔐 Sicherheit
 
-- Accounts und Passwörter: `~/.config/pkmailfilter/accounts.json`
-- Filter: `~/.config/pkmailfilter/filters/*.json`
-- Fernet-Schlüssel: `~/.config/pkmailfilter/fernet.key`
-
----
-
-## Fehler & Support
-
-Falls Fehler auftreten:
-
-- Prüfe die JSON-Konfigurationsdateien auf Syntaxfehler.
-- Kontrolliere, ob der Fernet-Schlüssel korrekt ist (bei `InvalidToken`-Fehlern).
-- Stelle sicher, dass IMAP-Zugangsdaten (Host, Port, Verschlüsselung) stimmen.
-- Nutze das Logfile (z.B. Cronjob-Output) zur Fehlersuche.
+- Passwörter werden **niemals im Klartext gespeichert**
+- Ein **Fernet-Schlüssel** wird in `config/fernet.key` generiert und zum Ver- und Entschlüsseln verwendet
+- Du solltest `fernet.key` und `accounts.json` sicher aufbewahren
 
 ---
 
-## Screenshots
+## 🧪 Debug / Testmodus
 
-*Screenshots folgen...*
-
----
-
-## Lizenz
-
-*Hier deine Lizenz ergänzen*
+Zum Testen ohne echte IMAP-Verbindung kannst du die IMAP-Logik in `apply_filters()` deaktivieren oder simulieren.
 
 ---
 
-Viel Erfolg und bei Fragen einfach melden!
+## 📌 Tipps
+
+- Du kannst eigene globale oder Account-Filter definieren – beachte die korrekte JSON-Struktur
+- Der Ordnername für verschobene Mails muss im Mailkonto existieren (z. B. "Trash", "Spam")
+- Wenn du Gmail nutzt, beachte die speziellen IMAP-/OAuth-Bedingungen
+
+---
+
+## 📄 Lizenz
+
+Dies ist ein privates Tool, das du frei erweitern kannst. Eine öffentliche Lizenz kannst du auf Wunsch ergänzen (z. B. MIT).
