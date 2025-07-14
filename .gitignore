@@ -1,0 +1,28 @@
+# Bytecode-Dateien
+__pycache__/
+*.pyc
+*.pyo
+
+# Systemdateien
+.DS_Store
+Thumbs.db
+
+# Virtuelle Umgebungen
+venv/
+.env/
+.venv/
+
+# Editor-spezifische Dateien
+.vscode/
+.idea/
+
+# Konfigurations- und Filterordner
+config/
+filters/
+
+# Logdateien
+*.log
+
+# Sonstige temporäre Dateien
+*.swp
+*.swo
